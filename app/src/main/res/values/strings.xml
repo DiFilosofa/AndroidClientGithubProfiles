@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GithubProfiles</string>
+
+    <string name="loading_ellipsis">Loading…</string>
+    <string name="error_try_again">Something went wrong. Please try again later.</string>
+    <string name="search_hint">Input username or email…</string>
+    <string name="no_data">No Data</string>
 </resources>
