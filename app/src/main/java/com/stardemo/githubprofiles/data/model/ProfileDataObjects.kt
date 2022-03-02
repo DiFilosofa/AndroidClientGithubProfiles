@@ -1,4 +1,4 @@
-package com.stardemo.githubprofiles.data
+package com.stardemo.githubprofiles.data.model
 
 import com.google.gson.annotations.SerializedName
 

@@ -64,7 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvUsername">
 
-        <com.stardemo.githubprofiles.ui.views.ProfileStatView
+        <com.stardemo.githubprofiles.ui.main.view.custom.ProfileStatView
             android:id="@+id/statFollowers"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             app:statName="@string/profile_stat_followers"
             app:statValue="0" />
 
-        <com.stardemo.githubprofiles.ui.views.ProfileStatView
+        <com.stardemo.githubprofiles.ui.main.view.custom.ProfileStatView
             android:id="@+id/statRepos"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
             app:statName="@string/profile_stat_repos"
             app:statValue="0" />
 
-        <com.stardemo.githubprofiles.ui.views.ProfileStatView
+        <com.stardemo.githubprofiles.ui.main.view.custom.ProfileStatView
             android:id="@+id/statFollowing"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

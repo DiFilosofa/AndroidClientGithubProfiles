@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stardemo.githubprofiles.R
-import com.stardemo.githubprofiles.data.Profile
+import com.stardemo.githubprofiles.data.model.Profile
 import com.stardemo.githubprofiles.databinding.PartialProfileItemBinding
 
 class ProfilesListAdapter(private val onItemClicked: (String) -> Unit) :

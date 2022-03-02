@@ -4,10 +4,8 @@ import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.faltenreich.skeletonlayout.Skeleton
-import com.faltenreich.skeletonlayout.createSkeleton
 import com.stardemo.githubprofiles.R
-import com.stardemo.githubprofiles.data.Profile
+import com.stardemo.githubprofiles.data.model.Profile
 import com.stardemo.githubprofiles.ui.viewmodel.GithubProfileViewModel
 import com.stardemo.githubprofiles.databinding.ActivityProfileDetailBinding
 import com.stardemo.githubprofiles.ui.base.BaseActivity

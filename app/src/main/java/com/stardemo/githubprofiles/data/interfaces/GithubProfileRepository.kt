@@ -1,7 +1,7 @@
 package com.stardemo.githubprofiles.data.interfaces
 
-import com.stardemo.githubprofiles.data.Profile
-import com.stardemo.githubprofiles.data.Profiles
+import com.stardemo.githubprofiles.data.model.Profile
+import com.stardemo.githubprofiles.data.model.Profiles
 import retrofit2.Response
 
 interface GithubProfileRepository {

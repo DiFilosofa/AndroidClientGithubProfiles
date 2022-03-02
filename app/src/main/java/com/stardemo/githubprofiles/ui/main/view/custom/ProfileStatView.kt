@@ -1,4 +1,4 @@
-package com.stardemo.githubprofiles.ui.views
+package com.stardemo.githubprofiles.ui.main.view.custom
 
 import android.content.Context
 import android.util.AttributeSet

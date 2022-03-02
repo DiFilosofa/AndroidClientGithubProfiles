@@ -3,8 +3,8 @@ package com.stardemo.githubprofiles.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.stardemo.githubprofiles.data.Profile
-import com.stardemo.githubprofiles.data.Profiles
+import com.stardemo.githubprofiles.data.model.Profile
+import com.stardemo.githubprofiles.data.model.Profiles
 import com.stardemo.githubprofiles.data.interfaces.GithubProfileRepository
 import com.stardemo.githubprofiles.data.repositories.GithubProfileRepoImpl
 import com.stardemo.githubprofiles.ui.base.BaseViewModel

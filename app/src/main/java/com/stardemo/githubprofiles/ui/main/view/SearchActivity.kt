@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
 import com.stardemo.githubprofiles.R
-import com.stardemo.githubprofiles.data.Profile
+import com.stardemo.githubprofiles.data.model.Profile
 import com.stardemo.githubprofiles.ui.main.adapter.ProfilesListAdapter
 import com.stardemo.githubprofiles.databinding.ActivitySearchBinding
 import com.stardemo.githubprofiles.ui.base.BaseActivity
@@ -42,6 +42,7 @@ class SearchActivity : BaseActivity() {
 
     private fun setUpSearchView() {
         binding.searchView.apply {
+            performClick()
             queryHint = getString(R.string.search_hint)
             isSubmitButtonEnabled = false
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
