@@ -1,5 +1,6 @@
 package com.stardemo.githubprofiles.ui.main.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -53,7 +54,6 @@ class SearchActivity : BaseActivity() {
                         profileViewModel.cancelSearchJob()
                     } else {
                         profileViewModel.searchParticipant(newText)
-                        skeleton.showSkeleton()
                     }
                     return true
                 }
@@ -62,7 +62,7 @@ class SearchActivity : BaseActivity() {
     }
 
     private fun setUpProfilesAdapter() {
-        profilesAdapter = ProfilesListAdapter()
+        profilesAdapter = ProfilesListAdapter(this::onProfileClicked)
         binding.rvProfilesList.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
             adapter = profilesAdapter
@@ -70,10 +70,25 @@ class SearchActivity : BaseActivity() {
         }
     }
 
+    override fun showLoading(show: Boolean) {
+        if (show) {
+            skeleton.showSkeleton()
+        } else {
+            skeleton.showOriginal()
+        }
+    }
+
+    private fun onProfileClicked(username: String) {
+        startActivity(
+            Intent(this, ProfileDetailActivity::class.java).apply {
+                putExtra(ProfileDetailActivity.KEY_USER_NAME, username)
+            }
+        )
+    }
+
     private fun setProfilesList(profiles: MutableList<Profile>) {
         updateNoDataTextVisibility(show = profiles.isEmpty())
         profilesAdapter?.data = profiles
-        skeleton.showOriginal()
     }
 
     private fun updateNoDataTextVisibility(show: Boolean) {

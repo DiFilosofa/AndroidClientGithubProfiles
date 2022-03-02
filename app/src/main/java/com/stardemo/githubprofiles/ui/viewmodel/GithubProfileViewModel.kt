@@ -3,6 +3,7 @@ package com.stardemo.githubprofiles.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.stardemo.githubprofiles.data.Profile
 import com.stardemo.githubprofiles.data.Profiles
 import com.stardemo.githubprofiles.data.interfaces.GithubProfileRepository
 import com.stardemo.githubprofiles.data.repositories.GithubProfileRepoImpl
@@ -17,12 +18,11 @@ class GithubProfileViewModel(
 ) : BaseViewModel() {
 
     val profilesList by lazy { MutableLiveData<Profiles>() }
-
+    val profileDetail by lazy { MutableLiveData<Profile>() }
     private var searchTerm = ""
-    var currentProfilesPage: Int = 1
+    private var currentProfilesPage: Int = 1
 
     private fun searchProfiles() = viewModelScope.launch(Dispatchers.IO) {
-        showLoading.postValue(true)
         val response = repository.searchProfiles(searchTerm, maxProfilesPerPage, currentProfilesPage)
         // TODO: pagination
 //        Log.e("eeeeeee", response.headers()["link"] ?: "")
@@ -34,7 +34,7 @@ class GithubProfileViewModel(
             else -> {
                 showLoading.postValue(false)
                 profilesList.value?.items = mutableListOf()
-                onError.value = response.message()
+                onError.postValue(null)
                 Log.e("Error", response.message())
             }
         }
@@ -42,6 +42,7 @@ class GithubProfileViewModel(
 
     private var searchJob: Job? = null
     fun searchParticipant(searchText: String) {
+        showLoading.postValue(true)
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(searchDelayMillis)
@@ -52,6 +53,24 @@ class GithubProfileViewModel(
 
     fun cancelSearchJob() {
         searchJob?.cancel()
+        showLoading.postValue(false)
+    }
+
+    fun getProfile(username: String) = viewModelScope.launch(Dispatchers.IO) {
+        showLoading.postValue(true)
+        val response = repository.getProfileByName(username)
+        when {
+            response.isSuccessful -> {
+                showLoading.postValue(false)
+                profileDetail.postValue(response.body())
+            }
+            else -> {
+                showLoading.postValue(false)
+                profileDetail.postValue(null)
+                onError.postValue(null)
+                Log.e("Error", response.message())
+            }
+        }
     }
 
     override fun onCleared() {

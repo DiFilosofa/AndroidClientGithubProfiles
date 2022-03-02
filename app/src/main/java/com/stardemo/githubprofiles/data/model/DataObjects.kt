@@ -14,5 +14,6 @@ data class Profile(
     @SerializedName("name") val name: String,
     @SerializedName("company") val companyName: String,
     @SerializedName("followers") val followersCount: Int,
-    @SerializedName("public_repos") val publicReposCount: Int
+    @SerializedName("public_repos") val publicReposCount: Int,
+    @SerializedName("following") val followingCount: Int
 )

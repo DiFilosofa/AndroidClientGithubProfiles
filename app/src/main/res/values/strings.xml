@@ -5,4 +5,8 @@
     <string name="error_try_again">Something went wrong. Please try again later.</string>
     <string name="search_hint">Input username or email…</string>
     <string name="no_data">No Data</string>
+    <string name="profile_stat_followers">Followers</string>
+    <string name="profile_stat_repos">Repositories</string>
+    <string name="profile_stat_following">Following</string>
+    <string name="profile_username_initial">\@%s</string>
 </resources>

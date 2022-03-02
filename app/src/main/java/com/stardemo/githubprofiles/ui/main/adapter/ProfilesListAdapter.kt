@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.stardemo.githubprofiles.R
 import com.stardemo.githubprofiles.data.Profile
 import com.stardemo.githubprofiles.databinding.PartialProfileItemBinding
 
-class ProfilesListAdapter : RecyclerView.Adapter<ProfilesListAdapter.ProfileViewHolder>() {
+class ProfilesListAdapter(private val onItemClicked: (String) -> Unit) :
+    RecyclerView.Adapter<ProfilesListAdapter.ProfileViewHolder>() {
 
     var data: MutableList<Profile> = mutableListOf()
         set(value) {
@@ -26,14 +28,19 @@ class ProfilesListAdapter : RecyclerView.Adapter<ProfilesListAdapter.ProfileView
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindData(profile: Profile) {
             binding.apply {
-                Glide.with(itemView.context).load(profile.avatarUrl).into(ivUserAvatar)
+                Glide.with(itemView.context).load(profile.avatarUrl)
+                    .placeholder(R.drawable.avatar_placeholder).into(ivUserAvatar)
                 tvProfileName.text = profile.username
+                root.setOnClickListener {
+                    onItemClicked.invoke(profile.username)
+                }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
-        val binding = PartialProfileItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            PartialProfileItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ProfileViewHolder(binding)
     }
 
