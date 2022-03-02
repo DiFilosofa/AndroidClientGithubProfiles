@@ -22,7 +22,7 @@ interface GithubRetrofitService {
         @Query("q") query: String,
         @Query("per_page") perPage: Int,
         @Query("page") page: Int
-    ): Response<Profiles>
+    ): Profiles
 
     @GET("users/{username}")
     @Headers("Authorization: token ${BuildConfig.API_KEY}")

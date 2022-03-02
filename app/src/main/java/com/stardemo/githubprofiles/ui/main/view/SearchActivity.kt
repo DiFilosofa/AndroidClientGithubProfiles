@@ -5,6 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
@@ -14,6 +17,7 @@ import com.stardemo.githubprofiles.ui.main.adapter.ProfilesListAdapter
 import com.stardemo.githubprofiles.databinding.ActivitySearchBinding
 import com.stardemo.githubprofiles.ui.base.BaseActivity
 import com.stardemo.githubprofiles.ui.base.BaseViewModel
+import com.stardemo.githubprofiles.ui.main.adapter.ProfileLoadStateAdapter
 import com.stardemo.githubprofiles.ui.viewmodel.GithubProfileViewModel
 
 class SearchActivity : BaseActivity() {
@@ -35,8 +39,8 @@ class SearchActivity : BaseActivity() {
 
     override fun observeViewModel(viewModel: BaseViewModel) {
         super.observeViewModel(viewModel)
-        profileViewModel.profilesList.observe(this) {
-            setProfilesList(it.items)
+        profileViewModel.profiles.observe(this) {
+            setProfilesList(it)
         }
     }
 
@@ -46,28 +50,63 @@ class SearchActivity : BaseActivity() {
             queryHint = getString(R.string.search_hint)
             isSubmitButtonEnabled = false
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = true
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    updateNoDataTextVisibility(show = false)
-                    if (newText.isNullOrBlank()) {
-                        setProfilesList(mutableListOf())
-                        profileViewModel.cancelSearchJob()
-                    } else {
-                        profileViewModel.searchParticipant(newText)
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    if (!query.isNullOrBlank()) {
+                        profileViewModel.searchParticipant(query)
+                        binding.searchView.clearFocus()
                     }
                     return true
                 }
+
+                override fun onQueryTextChange(newText: String?): Boolean = true
             })
         }
     }
 
     private fun setUpProfilesAdapter() {
-        profilesAdapter = ProfilesListAdapter(this::onProfileClicked)
+        profilesAdapter = ProfilesListAdapter(this::onProfileClicked).apply {
+            addLoadStateListener { loadState ->
+                when (loadState.source.refresh) {
+                    is LoadState.Loading -> {
+                        if (snapshot().isEmpty()) {
+                            showLoading(true)
+                        }
+                        updateErrorTextVisibility(false)
+                    }
+                    is LoadState.NotLoading -> {
+                        showLoading(false)
+                        if (loadState.append.endOfPaginationReached && profilesAdapter!!.itemCount < 1) {
+                            updateErrorTextVisibility(true, getString(R.string.no_user_found))
+                        }
+                    }
+                    else -> {
+                        showLoading(false)
+                        handleLoadStatesError(loadState.source)
+                    }
+                }
+            }
+        }
         binding.rvProfilesList.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
-            adapter = profilesAdapter
+            layoutManager =
+                LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
+            adapter = profilesAdapter!!.withLoadStateHeaderAndFooter(
+                header = ProfileLoadStateAdapter { profilesAdapter?.retry() },
+                footer = ProfileLoadStateAdapter { profilesAdapter?.retry() }
+            )
             skeleton = applySkeleton(R.layout.partial_profile_item)
+        }
+    }
+
+    private fun handleLoadStatesError(loadStateSource: LoadStates) {
+        val error = when {
+            loadStateSource.prepend is LoadState.Error -> loadStateSource.prepend as LoadState.Error
+            loadStateSource.append is LoadState.Error -> loadStateSource.append as LoadState.Error
+            loadStateSource.refresh is LoadState.Error -> loadStateSource.refresh as LoadState.Error
+            else -> null
+        }
+        error?.let {
+            binding.rvProfilesList.isVisible = false
+            updateErrorTextVisibility(true, it.error.localizedMessage)
         }
     }
 
@@ -87,12 +126,19 @@ class SearchActivity : BaseActivity() {
         )
     }
 
-    private fun setProfilesList(profiles: MutableList<Profile>) {
-        updateNoDataTextVisibility(show = profiles.isEmpty())
-        profilesAdapter?.data = profiles
+    private fun setProfilesList(profiles: PagingData<Profile>) {
+        profilesAdapter?.submitData(lifecycle, profiles)
+        binding.rvProfilesList.isVisible = true
+        skeleton.showOriginal()
     }
 
-    private fun updateNoDataTextVisibility(show: Boolean) {
-        binding.tvNoData.isVisible = show
+    private fun updateErrorTextVisibility(
+        show: Boolean,
+        errText: String? = getString(R.string.error_try_again)
+    ) {
+        binding.tvError.apply {
+            isVisible = show
+            text = errText
+        }
     }
 }

@@ -2,58 +2,31 @@ package com.stardemo.githubprofiles.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import com.stardemo.githubprofiles.data.model.Profile
-import com.stardemo.githubprofiles.data.model.Profiles
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.stardemo.githubprofiles.data.interfaces.GithubProfileRepository
+import com.stardemo.githubprofiles.data.model.Profile
 import com.stardemo.githubprofiles.data.repositories.GithubProfileRepoImpl
 import com.stardemo.githubprofiles.ui.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class GithubProfileViewModel(
     private val repository: GithubProfileRepository = GithubProfileRepoImpl()
 ) : BaseViewModel() {
 
-    val profilesList by lazy { MutableLiveData<Profiles>() }
     val profileDetail by lazy { MutableLiveData<Profile>() }
-    private var searchTerm = ""
-    private var currentProfilesPage: Int = 1
+    private var searchTerm = MutableLiveData("a")
 
-    private fun searchProfiles() = viewModelScope.launch(Dispatchers.IO) {
-        val response = repository.searchProfiles(searchTerm, maxProfilesPerPage, currentProfilesPage)
-        // TODO: pagination
-//        Log.e("eeeeeee", response.headers()["link"] ?: "")
-        when {
-            response.isSuccessful -> {
-                showLoading.postValue(false)
-                profilesList.postValue(response.body())
-            }
-            else -> {
-                showLoading.postValue(false)
-                profilesList.value?.items = mutableListOf()
-                onError.postValue(null)
-                Log.e("Error", response.message())
-            }
-        }
+    val profiles = searchTerm.switchMap {
+        repository.searchProfiles(it).cachedIn(viewModelScope)
     }
 
-    private var searchJob: Job? = null
     fun searchParticipant(searchText: String) {
         showLoading.postValue(true)
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(searchDelayMillis)
-            searchTerm = searchText
-            searchProfiles()
-        }
-    }
-
-    fun cancelSearchJob() {
-        searchJob?.cancel()
-        showLoading.postValue(false)
+        searchTerm.value = searchText
     }
 
     fun getProfile(username: String) = viewModelScope.launch(Dispatchers.IO) {
@@ -71,15 +44,5 @@ class GithubProfileViewModel(
                 Log.e("Error", response.message())
             }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        searchJob?.cancel()
-    }
-
-    companion object {
-        const val maxProfilesPerPage = 30
-        const val searchDelayMillis = 1000L
     }
 }
