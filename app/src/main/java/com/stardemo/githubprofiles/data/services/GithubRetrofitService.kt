@@ -27,25 +27,4 @@ interface GithubRetrofitService {
     @GET("users/{username}")
     @Headers("Authorization: token ${BuildConfig.API_KEY}")
     suspend fun getProfilesByName(@Path("username") username: String): Response<Profile>
-
-    companion object {
-        var retrofitService: GithubRetrofitService? = null
-        private const val BASE_URL = "https://api.github.com"
-
-        fun getInstance(): GithubRetrofitService {
-            val interceptor = HttpLoggingInterceptor(BeautifyHttpLogger()).apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
-            val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
-            if (retrofitService == null) {
-                val retrofit = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                retrofitService = retrofit.create(GithubRetrofitService::class.java)
-            }
-            return retrofitService!!
-        }
-    }
 }

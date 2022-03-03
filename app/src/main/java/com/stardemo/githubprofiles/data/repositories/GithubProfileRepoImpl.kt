@@ -9,9 +9,11 @@ import com.stardemo.githubprofiles.data.interfaces.GithubProfileRepository
 import com.stardemo.githubprofiles.data.model.Profile
 import com.stardemo.githubprofiles.data.remote.RemoteDataSource
 import com.stardemo.githubprofiles.data.services.GithubRetrofitService
+import javax.inject.Inject
 
-class GithubProfileRepoImpl : GithubProfileRepository {
-    private val retrofitClient by lazy { GithubRetrofitService.getInstance() }
+class GithubProfileRepoImpl @Inject constructor(
+    private val retrofitClient: GithubRetrofitService
+): GithubProfileRepository {
 
     override fun searchProfiles(query: String): LiveData<PagingData<Profile>> =
         Pager(config = PagingConfig(

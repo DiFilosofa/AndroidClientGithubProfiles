@@ -10,7 +10,9 @@ import com.stardemo.githubprofiles.ui.viewmodel.GithubProfileViewModel
 import com.stardemo.githubprofiles.databinding.ActivityProfileDetailBinding
 import com.stardemo.githubprofiles.ui.base.BaseActivity
 import com.stardemo.githubprofiles.ui.base.BaseViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProfileDetailActivity : BaseActivity() {
     private lateinit var profileViewModel: GithubProfileViewModel
     private lateinit var binding: ActivityProfileDetailBinding

@@ -18,8 +18,10 @@ import com.stardemo.githubprofiles.ui.base.BaseViewModel
 import com.stardemo.githubprofiles.ui.main.adapter.ProfileLoadStateAdapter
 import com.stardemo.githubprofiles.ui.main.adapter.ProfilesListAdapter
 import com.stardemo.githubprofiles.ui.viewmodel.GithubProfileViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class SearchActivity : BaseActivity() {
 
     private lateinit var profileViewModel: GithubProfileViewModel

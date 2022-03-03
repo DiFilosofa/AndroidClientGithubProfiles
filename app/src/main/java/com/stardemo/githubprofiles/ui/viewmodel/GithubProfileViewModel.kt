@@ -7,17 +7,19 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.stardemo.githubprofiles.data.interfaces.GithubProfileRepository
 import com.stardemo.githubprofiles.data.model.Profile
-import com.stardemo.githubprofiles.data.repositories.GithubProfileRepoImpl
 import com.stardemo.githubprofiles.ui.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GithubProfileViewModel(
-    private val repository: GithubProfileRepository = GithubProfileRepoImpl()
+@HiltViewModel
+class GithubProfileViewModel @Inject constructor(
+    private val repository: GithubProfileRepository
 ) : BaseViewModel() {
 
     val profileDetail by lazy { MutableLiveData<Profile>() }
-    private var searchTerm = MutableLiveData("a")
+    private var searchTerm = MutableLiveData("a") // initial search value so the list isn't empty by default
 
     val profiles = searchTerm.switchMap {
         repository.searchProfiles(it).cachedIn(viewModelScope)
