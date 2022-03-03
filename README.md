@@ -10,7 +10,7 @@
  
  Jetpack Paging 3
  
+ Dependency Injection with Hilt
+  
 # ToDo:
- DI with Hilt
- 
  Cache with Room
