@@ -7,6 +7,8 @@
  Kotlin Coroutines
  
  MVVM
+
+ Retrofit
  
  Jetpack Paging 3
  
