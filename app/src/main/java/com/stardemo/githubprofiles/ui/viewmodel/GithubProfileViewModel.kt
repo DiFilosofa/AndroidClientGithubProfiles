@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.stardemo.githubprofiles.data.interfaces.GithubProfileRepository
 import com.stardemo.githubprofiles.data.model.Profile

@@ -31,9 +31,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_size_medium"
         android:text="@string/error_try_again"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+
+    <include
+        android:id="@+id/vLoading"
+        layout="@layout/partial_loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
