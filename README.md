@@ -1,4 +1,6 @@
-# AndroidClientGithubProfiles
+# AndroidClientGithubProfiles:
+ A Android demo project 
+
 # Tech
  Kotlin
  
